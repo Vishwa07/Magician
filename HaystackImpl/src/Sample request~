@@ -1,0 +1,20 @@
+Dir
+
+Put
+http://127.0.0.1:8001
+{"token":"Vishwa","blobSize":3}
+retu
+get
+http://127.0.0.1:8000/ImageID
+
+store
+./Haystack.out store 127.0.0.1 8002 /home/sravicha/Desktop/Magician/HaystackImpl/bin/data
+PUT
+{"token":"1,Vishwa","image":"233"} 
+get 
+http://127.0.0.1:8000/1,Vishwa
+
+
+
+./Haystack.out store 127.0.0.1 8002 /home/sravicha/Desktop/Magician/HaystackImpl/bin/data
+

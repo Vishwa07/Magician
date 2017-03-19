@@ -1,0 +1,25 @@
+
+Sample PUT request for directory
+PUT
+http://127.0.0.1:8001
+{"token":"Vishwa","blobSize":3}
+returns token 
+
+Sample PUT request for store
+
+PUT
+{"token":"1,Vishwa","image":"actual data"} 
+
+Sample GET request from store
+GET 
+http://127.0.0.1:8000/1,Vishwa
+
+
+running the services
+
+starting store
+./Haystack.out store 127.0.0.1 8002 "PATH FOR DATA"
+starting dir
+./Haystack.out dir 127.0.0.1 8001 
+
+
