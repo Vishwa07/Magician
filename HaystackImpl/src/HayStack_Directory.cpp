@@ -31,8 +31,6 @@ string Directory::AssignTokenToWrite(string ImageID, unsigned long ImageSize)
 	int vindex=0;
   for (std::map<string,unsigned long>::iterator it=URLDetails.begin(); it!=URLDetails.end(); ++it) {	
 	   ++vindex;
-	   	cout<< it->first << "\n";
-
 		if( it->second  >= ImageSize)
 		{
 			URLDetails[it->first] -= ImageSize;
