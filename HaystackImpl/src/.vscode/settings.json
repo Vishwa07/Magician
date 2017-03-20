@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "map": "cpp"
+        "map": "cpp",
+        "*.ipp": "cpp",
+        "iosfwd": "cpp",
+        "slist": "cpp",
+        "initializer_list": "cpp"
     }
 }

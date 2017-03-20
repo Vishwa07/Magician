@@ -15,15 +15,11 @@ enum FileAction
 class Directory
 {
 static Directory *Instance;
-static const int TotalVolumes =4;
-int AvailableVolumesToWrite[TotalVolumes];
-std::map<int,unsigned long > SpaceMap;
-static const unsigned long MaxSpaceForVolume = 1000000000;
-std::map<string,int> StorageMap;
+std::map<string,unsigned long> URLDetails;
+std::map<string,string> IDToURL;
 Directory();
 public:
 static Directory* getInstance();
 string AssignTokenToWrite(string ImageID, unsigned long ImageSize);
 string GetTokenToRead(string imageid);
-//int timeslice = 100;
 };

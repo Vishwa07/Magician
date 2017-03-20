@@ -46,7 +46,7 @@ void HaystackStore::write(string vid, string Imageid,const char* ImageData,int s
 
 			FILE* fp = fopen(dataPath.c_str(), "ab+");
 			if (fp==NULL)
-  		{
+  			{
 				cerr<<"Internal error occurred\n";
 				return;
 			}

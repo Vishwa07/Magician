@@ -6,11 +6,11 @@ using namespace std;
 
 Directory::Directory()
 {
-	for(int i=1;i<=4;i++)
-	{
-		SpaceMap[i]= 0;
-		AvailableVolumesToWrite[i-1]=i;
-	}
+	string url1= "http://127.0.0.1:8002";
+	URLDetails[url1] = 1073741824; //1 gb;
+	url1 = "http://127.0.0.1:8003";
+	URLDetails[url1] = 1073741824 ;//1 gb;
+
 }
 
 
@@ -27,25 +27,20 @@ Directory* Directory::getInstance()
 
 string Directory::AssignTokenToWrite(string ImageID, unsigned long ImageSize)
 {
-	static int NextVolumeLocation = 0;
 	string result;
-	for(int i=NextVolumeLocation; i < TotalVolumes && AvailableVolumesToWrite[i] != 0; i++)
-	{
-		int WritableVolume = AvailableVolumesToWrite[i];
-		if((SpaceMap[WritableVolume]+ImageSize) <= MaxSpaceForVolume)
+	int vindex=0;
+  for (std::map<string,unsigned long>::iterator it=URLDetails.begin(); it!=URLDetails.end(); ++it) {	
+	   ++vindex;
+	   	cout<< it->first << "\n";
+
+		if( it->second  >= ImageSize)
 		{
-			//ActionMap[WritableVolume] = ;
-			SpaceMap[WritableVolume] += ImageSize;
-			NextVolumeLocation = (i+1)%(TotalVolumes);
-			StorageMap[ImageID] = WritableVolume;// what if image names repeat??
+			URLDetails[it->first] -= ImageSize;
+			IDToURL[ImageID] = it->first;// what if image names repeat??
 			stringstream convert;
-			convert << WritableVolume;
+			convert << vindex;
 			result = (convert.str()+","+ImageID);
-			return result;
-		}
-		else
-		{
-			AvailableVolumesToWrite[i] = 0;
+			return it->first+ "/" + result;
 		}
 
 	}
@@ -53,17 +48,14 @@ string Directory::AssignTokenToWrite(string ImageID, unsigned long ImageSize)
 	return "0";//No writable volumes found. All are full
 }
 string Directory::GetTokenToRead(string Imageid)
-{
-	std::map<string,int>::iterator it;
-	it = StorageMap.find(Imageid);
+{	
+	std::map<string,string>::iterator it;
+	it = IDToURL.find(Imageid);
 	string result;
-	if(it != StorageMap.end())
+	if(it != IDToURL.end())
 	{
-		stringstream convert;
-		convert << StorageMap[Imageid];
-		result = (convert.str()+","+Imageid);
-		return result ;
+		return it->second;
 	}
 	else
-		return 0;//Image ID not found in the map.
+		return "Image not found";//Image ID not found in the map.
 }
