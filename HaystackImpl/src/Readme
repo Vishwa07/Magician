@@ -1,4 +1,10 @@
 
+install 
+
+apt-get install libboost-all-dev libasio-dev libssl-dev libcppnetlib-dev
+
+
+
 Sample PUT request for directory
 PUT
 http://127.0.0.1:8001

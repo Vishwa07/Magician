@@ -2,7 +2,7 @@
 //  HttpServer.cpp
 //  src
 //
-//  Created by Vishwa on 20/11/2016.
+//  Created by  on 20/11/2016.
 //
 //
 
@@ -10,11 +10,10 @@
 #include "Haystack_Store.hpp"
 #include "HayStack_Directory.h"
 #include <json/json.h>
-
 using namespace Json;
 string dataPath;
 void Store_Handler::operator() (Store_Server::request const &request,
-                 Store_Server::response &response) {
+                Store_Server::connection_ptr connection) {
     std::string ip = source(request);
     std::string strMethod = request.method;
 
@@ -29,7 +28,15 @@ void Store_Handler::operator() (Store_Server::request const &request,
       std::string Vid = token.substr(0,delPos);
       std::string ImageID = token.substr(delPos+1,token.length()-1);
       char * data = store->Read(ImageID);
-      response = Store_Server::response::stock_reply( Store_Server::response::ok, data );
+      connection->set_status(Store_Server::connection::ok);
+    /*  Store_Server::response_header content_type;
+      content_type.name = "Content-Type";
+      content_type.value = "application/octet-stream";
+      connection->set_headers(content_type);*/
+       std::string strdata(data);
+
+      connection->write(strdata);
+
     }
 
     else if(strMethod == "PUT")
@@ -47,11 +54,19 @@ void Store_Handler::operator() (Store_Server::request const &request,
       std::string ImageID = token.substr(delPos+1,token.length()-1);
       std::string image = root.get("image", "empty" ).asString();
       if(image=="empty")
-        response = Store_Server::response::stock_reply( Store_Server::response::ok, "Invalid request structure" );
+      {
+             connection->set_status(Store_Server::connection::bad_request);
+              connection->write("Invalid request structure");
+
+      }
 
       store->write(Vid,ImageID,image.c_str(),image.length());
-      response = Store_Server::response::stock_reply( Store_Server::response::ok, "write successful" );
-
+      connection->set_status(Store_Server::connection::ok);
+     /* Store_Server::response_header content_type;
+      content_type.name = "Content-Type";
+      content_type.value = "application/octet-stream";
+      connection->set_headers(content_type);*/
+      connection->write("write successful!!!");
     }
 
 
@@ -112,8 +127,10 @@ int main(int argc, char * argv[]) {
       if(strcmp(argv[1],"store")==0)
       {
         Store_Handler store_handler;
+        boost::network::utils::thread_pool thread_pool1(2);
+
         dataPath =  std::string(argv[4]);
-        Store_Server server_(argv[2], argv[3], store_handler);
+        Store_Server server_(argv[2], argv[3], store_handler,thread_pool1);
         cout <<"Store listening...\n";
         server_.run();
 

@@ -2,14 +2,16 @@
 //
 
 #include"HayStack_Directory.h"
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread/thread.hpp> 
 using namespace std;
 
 Directory::Directory()
 {
 	string url1= "http://127.0.0.1:8002";
-	URLDetails[url1] = 1073741824; //1 gb;
+	URLDetails[url1] = 10; //1 gb;
 	url1 = "http://127.0.0.1:8003";
-	URLDetails[url1] = 1073741824 ;//1 gb;
+	URLDetails[url1] = 10 ;//1 gb;
 
 }
 
@@ -29,7 +31,9 @@ string Directory::AssignTokenToWrite(string ImageID, unsigned long ImageSize)
 {
 	string result;
 	int vindex=0;
-  for (std::map<string,unsigned long>::iterator it=URLDetails.begin(); it!=URLDetails.end(); ++it) {	
+  boost::this_thread::sleep(boost::posix_time::milliseconds(50000));
+  for (std::map<string,unsigned long>::iterator it=URLDetails.begin(); it!=URLDetails.end(); ++it) 
+  {	
 	   ++vindex;
 		if( it->second  >= ImageSize)
 		{
